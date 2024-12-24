@@ -2,11 +2,12 @@
 INTRODUCTION                                                          *love2d*
 
 love2d.nvim is a simple plugin to help you develop games using LÖVE.
+This version is a fork of S1M0N38's plugin, make sure to check it out!
 
 Table of contents:
 
 1. SETUP: Install and setup the plugin.                         |love2d-setup|
-2. COMMANDS: Commands provided by the plugin.                |love2d-commands|
+2. LUA API: User functions provided by the plugin.                |love2d-api|
 3. LSP: Explaining LSP support for LÖVE.                          |love2d-lsp|
 4. GLSL: Notes about GLSL and tree-sitter support.               |love2d-glsl|
 
@@ -19,14 +20,10 @@ example, using `lazy.nvim`:
 
 >lua
     {
-      "S1M0N38/love2d.nvim",
-      cmd = "LoveRun",
-      opts = { },
-      keys = {
-        { "<leader>v", desc = "LÖVE" },
-        { "<leader>vv", "<cmd>LoveRun<cr>", desc = "Run LÖVE" },
-        { "<leader>vs", "<cmd>LoveStop<cr>", desc = "Stop LÖVE" },
-      },
+      "ColdMacaroni/love2d.nvim",
+      init = function()
+        -- Set vim.g.love2d_opts here
+      end,
     }
 <
 
@@ -34,68 +31,67 @@ Usually, in the installation example, the plugin author provides the bare
 minimum setup. However, love2d.nvim has very few options so it makes sense to
 discuss them here. Here is the breakdown of the previous example:
 
-- `S1M0N38/love2d.nvim`: Where to download the plugin hosted on GitHub.
-- `cmd`: Load this plugin only when the `:LoveRun` command is called.
-- `opts`: A table with plugin options. See |love2d.setup()|.
-- `keys`: Key mappings for the plugin.
-
-So with this configuration, when the command `:LoveRun` is called:
-
-1. The `love2d.nvim` plugin is loaded
-2. |love2d.setup()| is called with the `opts` table
-3. The command `:LoveRun` is run. See |love2d-commands|.
-
-(If you are too lazy to run the `:LoveRun` command, you can use the keymap
-`<leader>vv`.)
+- `ColdMacaroni/love2d.nvim`: Where to download the plugin hosted on GitHub.
+- `init`: This function is called when nvim starts up, in it you can set the
+  options to be read by this plugin during runtime.
 
 
-                                                              *love2d.setup()*
-love2d.setup({opts}) ~
+================================================================================
+OPTIONS                                                       *love2d-options*
+                                                               *g:love2d_opts*
+  `love2D.nvim` reads this table to get its settings. You may set it like
 
-  The `<plugin>.setup()` function is a convention used by many plugins to set
-  up options provided by the user. It's so common that `lazy.nvim`
-  automatically calls the `<plugin>.setup()` function using the `opts` table.
+>vim
+    let g:love2d_opts = { ... }
+<
 
-  The table `opts` that you specify, will be merged with the default options
-  which are:
+  or
 
 >lua
-  {
-    path_to_love_bin = "love",
-    path_to_love_library = vim.fn.globpath(vim.o.runtimepath, "love2d/library"),
+    vim.g.love2d_opts = { ... }
+<
+
+  The default values are as follows:
+
+>lua
+  vim.g.love2d_opts = {
+    love_binary = "love",
+    love_library = vim.fn.globpath(vim.o.runtimepath, "love2d/library"),
     restart_on_save = false,
   }
 <
 
-  - `path_to_love_bin`: The path to the `love` binary. If you have the `love`
+  - `love_binary`: The path to the `love` binary. If you have the `love`
     binary in your `PATH` you can leave this option empty. If you are using
     MacOS, you can add `love.app` to your `/Applications` and then set to
     `"/Applications/love.app/Contents/MacOS/love"`
 
-  - `path_to_love_library`: `love2d.nvim` provides a lua annotation library
+  - `love_library`: `love2d.nvim` provides a lua annotation library
     for `love` namespace, this is what makes LSP work with LÖVE. You can set
-    this to `""` if you don't want LSP to automatically be setup.
+    this to `""` if you don't want LSP to automatically be setup. It uses
+    https://github.com/LuaCATS/love2d
 
   - `restart_on_save`: Restart the game using |love2d.stop()| and
     |love2d.run()| when you save a file in the game project.
 
 
 ================================================================================
-COMMANDS                                                     *love2d-commands*
+LUA API                                                     *love2d-api*
 
-User commands, that is commands that start with `:` followed by a capital
-letter, are the main way to interact with plugins. The available commands
-provided by this plugin are:
+  This plugin exposes two main functions to interact with LÖVE projects:
 
-:LoveRun [path/to/game/src] ~
-  When running this command without providing `path/to/game/src`, love2d will
-  try to look for the directory containing `main.lua`. If you try to run
-  from a source file of your game, it should work.
-  You can also provide the path to your game source code to run the game. For
-  example, if you focus on developing only one game at a time, it makes sense
-  to define a keymap to run that specific game.
+run({path})                                                     *love2d.run()*
+  Runs the project asynchronously. This plugin only supports running ONE
+  project at a time.
 
-:LoveStop  ~
+  Parameters:  ~
+    • {path}  (`string?`) The path to the directory containing `main.lua`. If
+      it's `nil`, the plugin will search for a `main.lua` file. It should work
+      if you call this from a source file of your game.
+      It may be useful to define a keymap to run a specific game, for example.
+
+
+stop()                                                         *love2d.stop()*
   If you have previously started a game using `:LoveRun`, you can stop it
   using this command.
 
