@@ -1,3 +1,7 @@
+> [!NOTE]
+> This is a fork of [S1M0N38's plugin](https://github.com/S1M0N38/love2d.nvim), make sure to check it out! I just wanted to make some changes or me.
+______________________________________________________________________
+
 <h1 align="center">♡&nbsp;&nbsp;LÖVE 2D&nbsp;&nbsp;♡</h1>
 
 <p align="center">
