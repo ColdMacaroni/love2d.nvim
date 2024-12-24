@@ -27,8 +27,9 @@ love2d.setup = function(opts)
 end
 
 ---Run a Love2D project
----@param path string: The path to the Love2D project
+---@param path string?: The path to the Love2D project. Nil to search.
 love2d.run = function(path)
+  path = path or love2d.find_src_path("")
   if love2d.job and love2d.job.id then
     vim.notify("A LÖVE project is already running.", vim.log.levels.WARN)
     return
