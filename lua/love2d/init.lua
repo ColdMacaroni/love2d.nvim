@@ -30,6 +30,12 @@ end
 ---@param path string?: The path to the Love2D project. Nil to search.
 love2d.run = function(path)
   path = path or love2d.find_src_path("")
+
+  if not path then
+    vim.notify("No main.lua file found", vim.log.levels.ERROR)
+    return
+  end
+
   if love2d.job and love2d.job.id then
     vim.notify("A LÖVE project is already running.", vim.log.levels.WARN)
     return
