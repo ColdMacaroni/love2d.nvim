@@ -36,7 +36,12 @@ love2d.run = function(path)
   end
   love2d.job = {} -- reset job
   vim.notify("Running LÖVE project at " .. path)
-  local cmd = require("love2d.config").options.path_to_love_bin .. " " .. path
+  vim.cmd [[ runtime plugin/love2d.lua ]]
+  local cmd = {
+    (type(vim.g.love2d_opts) == "table" and vim.g.love2d_opts.love_binary) or vim.g.love2d_default_opts.love_binary,
+    path
+  }
+
   love2d.job.id = vim.fn.jobstart(cmd, {
     on_exit = function(_, code)
       love2d.job.exit_code = code
