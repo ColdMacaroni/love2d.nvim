@@ -68,12 +68,22 @@ OPTIONS                                                       *love2d-options*
 
   - `love_library`: `love2d.nvim` provides a lua annotation library
     for `love` namespace, this is what makes LSP work with LÖVE. You can set
-    this to `""` if you don't want LSP to automatically be setup. It uses
-    https://github.com/LuaCATS/love2d
+    this to `""` or `nil` if you don't want LSP to automatically be setup.
+    This plugin uses https://github.com/LuaCATS/love2d.
 
   - `restart_on_save`: Restart the game using |love2d.stop()| and
     |love2d.run()| when you save a file in the game project.
 
+                                                         *g:love2d_is_project*
+This plugin tries to find a main.lua file in the current or upward directories
+to detect if you are currently editing a file in a love2d project. You may
+also set this manually by setting `g:love2d_is_project` to `true` (`v:true`).
+
+>lua
+  vim.g.love2d_is_project = true
+<
+
+This variable will NOT get set by the plugin.
 
 ================================================================================
 LUA API                                                     *love2d-api*
