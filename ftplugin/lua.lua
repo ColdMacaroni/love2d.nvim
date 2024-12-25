@@ -1,8 +1,8 @@
-vim.cmd.runtime "plugin/love2d.lua"
+vim.cmd.runtime("plugin/love2d.lua")
 
 -- Ensure this is a table to avoid problems later
 if type(vim.g.love2d_opts) ~= "table" then
-	vim.g.love2d_opts = {}
+  vim.g.love2d_opts = {}
 end
 
 -- Enable LSP settings if in a love 2d project
