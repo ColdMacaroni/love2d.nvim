@@ -1,3 +1,10 @@
+vim.cmd.runtime "plugin/love2d.lua"
+
+-- Ensure this is a table to avoid problems later
+if type(vim.g.love2d_opts) ~= "table" then
+	vim.g.love2d_opts = {}
+end
+
 -- Enable LSP settings if in a love 2d project
 -- Usually in vimscript people use 0 as "false", but that's a truthy value in lua.
 local buf_path = vim.fn.expand("%:h")

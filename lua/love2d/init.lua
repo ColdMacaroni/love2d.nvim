@@ -20,12 +20,6 @@ love2d.find_src_path = function(path)
   return vim.fn.fnamemodify(main, ":h")
 end
 
----Initialize Love2D with options
----@param opts options: The options to initialize Love2D with
-love2d.setup = function(opts)
-  require("love2d.config").setup(opts)
-end
-
 ---Run a Love2D project
 ---@param path string?: The path to the Love2D project. Nil to search.
 love2d.run = function(path)
