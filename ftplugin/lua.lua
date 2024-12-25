@@ -12,8 +12,7 @@ end
 if not vim.g.love2d_lsp_configured then
   local lspconfig_installed, lspconfig = pcall(require, "lspconfig")
   if lspconfig_installed then
-    library_path = vim.g.love2d_opts.love_library or vim.g.love2d_default_opts.love_library
-    print(library_path)
+    local library_path = vim.g.love2d_opts.love_library or vim.g.love2d_default_opts.love_library
 
     if vim.fn.isdirectory(library_path) == 0 then
       vim.notify("The library path " .. library_path .. " does not exist.", vim.log.levels.ERROR)
