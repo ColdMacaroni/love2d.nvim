@@ -56,7 +56,7 @@ love2d.stop = function()
     vim.notify("No LÖVE project running.", vim.log.levels.WARN)
     return
   end
-  vim.notify("Stop LÖVE project")
+  vim.notify("Stopped LÖVE project")
   vim.fn.jobstop(love2d.job.id)
 end
 
