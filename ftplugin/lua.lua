@@ -19,21 +19,32 @@ end
 if not vim.g.love2d_lsp_configured then
   local lspconfig_installed, lspconfig = pcall(require, "lspconfig")
   if lspconfig_installed then
-    local library_path = vim.g.love2d_opts.love_library or vim.g.love2d_default_opts.love_library
+    ---Gets the named library from either user opts or default opts
+    ---@param l string
+    local function lib(l)
+      local usr = vim.g.love2d_opts.love_libraries
+      local default = vim.g.love2d_default_opts.love_libraries
+      return (usr and usr[l]) or default[l]
+    end
 
-    if vim.fn.isdirectory(library_path) == 0 then
-      vim.notify("The library path " .. library_path .. " does not exist.", vim.log.levels.ERROR)
-      return
+    local libraries = {
+      lib("love2d"),
+      lib("luasocket"),
+      vim.fn.fnamemodify(path, ":p"),
+    }
+
+    for _, p in ipairs(libraries) do
+      if vim.fn.isdirectory(p) == 0 then
+        vim.notify("The library path " .. p .. " does not exist.", vim.log.levels.ERROR)
+        return
+      end
     end
 
     lspconfig.lua_ls.setup({
       settings = {
         Lua = {
           workspace = {
-            library = {
-              library_path,
-              vim.fn.fnamemodify(path, ":p")
-            }
+            library = libraries,
           },
         },
       },
