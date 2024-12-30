@@ -56,7 +56,10 @@ OPTIONS                                                       *love2d-options*
 >lua
   vim.g.love2d_opts = {
     love_binary = "love",
-    love_library = vim.fn.globpath(vim.o.runtimepath, "love2d/library"),
+    love_libraries = {
+      love2d = "{runtime}/love2d/library",
+      luasocket = "{runtime}/luasocket/library",
+    },
     restart_on_save = false,
   }
 <
@@ -66,10 +69,14 @@ OPTIONS                                                       *love2d-options*
     MacOS, you can add `love.app` to your `/Applications` and then set to
     `"/Applications/love.app/Contents/MacOS/love"`
 
-  - `love_library`: `love2d.nvim` provides a lua annotation library
-    for `love` namespace, this is what makes LSP work with LÖVE. You can set
-    this to `""` or `nil` if you don't want LSP to automatically be setup.
-    This plugin uses https://github.com/LuaCATS/love2d.
+  - `love_libraries`: `love2d.nvim` vendors LuaCATS annotations for the `love`
+    namespace, and the `socket` library. This is what makes LSP work with LÖVE.
+    It also adds the directory with the `main.lua` file automatically.
+    It looks for these libraries in the runtime directories, finding the first
+    match. This is represented as `{runtime}` in the example, but putting
+    `{runtime}` in your configuration will NOT work.
+    This plugin uses https://github.com/LuaCATS/love2d and
+    https://github.com/LuaCATS/luasocket.
 
   - `restart_on_save`: Restart the game using |love2d.stop()| and
     |love2d.run()| when you save a file in the game project.
@@ -84,6 +91,16 @@ also set this manually by setting `g:love2d_is_project` to `true` (`v:true`).
 <
 
 This variable will NOT get set by the plugin.
+
+                                                     *g:love2d_lsp_configured*
+This plugin uses `g:love2d_lsp_configured` as a guard variable to only
+configure the LSP once. If you don't want this plugin to configure the
+language server, set this variable to true before the `ftplugin/lua.lua` file
+is loaded.
+
+>lua
+  vim.g.love2d_lsp_configured = true
+<
 
 ================================================================================
 LUA API                                                     *love2d-api*
