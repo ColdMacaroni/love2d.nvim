@@ -29,7 +29,12 @@ if not vim.g.love2d_lsp_configured then
     lspconfig.lua_ls.setup({
       settings = {
         Lua = {
-          workspace = { library = { library_path } },
+          workspace = {
+            library = {
+              library_path,
+              vim.fn.fnamemodify(path, ":p")
+            }
+          },
         },
       },
     })
